@@ -23,24 +23,28 @@ jQuery.fn.btsConfirmButton = function(options, callback) {
             thisBtn$.html(oriText).removeClass(options.className).data('confirmed',false);
         }
 
-        thisBtn$.data('confirmed', false);
-        thisBtn$.on('click.confirm', function(e) {
-            e.preventDefault();
-            if(thisBtn$.data('confirmed'))
-            {
-                callback.call(thisBtn$, e);
-                resetBtn();
-            }
-            else
-            {
-                thisBtn$.data('confirmed',true);
-                thisBtn$.html(options.msg).addClass(options.className).bind('mouseout.confirm', function() {
-                    timeoToken = setTimeout(resetBtn, options.timeout);
-                }).bind('mouseover.confirm', function() {
-                    clearTimeout(timeoToken);
-                });
-            }
-        }).removeClass(options.className);
+		thisBtn$.data('confirmed', false);
+		thisBtn$.on('click.confirm', function(e) {
+			
+			if(thisBtn$.data('confirmed'))
+			{
+			    resetBtn();
+				if ($.isFunction(callback)) {
+					e.preventDefault();
+					callback.call(thisBtn$, e);
+				}
+			}
+			else
+			{
+				e.preventDefault();
+				thisBtn$.data('confirmed',true);
+				thisBtn$.html(options.msg).addClass(options.className).bind('mouseout.confirm', function() {
+					timeoToken = setTimeout(resetBtn, options.timeout);
+				}).bind('mouseover.confirm', function() {
+					clearTimeout(timeoToken);
+				});
+			}
+		}).removeClass(options.className);
 
     });
 

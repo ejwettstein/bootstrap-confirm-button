@@ -11,13 +11,19 @@ jQuery.fn.btsConfirmButton = function(options, callback) {
 	options = $.extend({
 		msg: "I'm sure!",
 		className: 'btn-danger',
-		timeout: 2000
+		timeout: 2000,
+        appendMsg: false
 	}, options);
 
-    $(this).each(function(idx, btn) {
-        var timeoToken,
-            thisBtn$ = $(btn),
-            oriText = thisBtn$.html();
+	$(this).each(function(idx, btn) {
+		var timeoToken,
+			thisBtn$ = $(btn),
+			oriText = thisBtn$.html(),
+			message = options.msg;
+
+		if (options.appendMsg) {
+		    message = oriText + " " + options.msg;
+		}
 
         function resetBtn() {
             thisBtn$.html(oriText).removeClass(options.className).data('confirmed',false);
@@ -37,8 +43,8 @@ jQuery.fn.btsConfirmButton = function(options, callback) {
 			else
 			{
 				e.preventDefault();
-				thisBtn$.data('confirmed',true);
-				thisBtn$.html(options.msg).addClass(options.className).bind('mouseout.confirm', function() {
+				thisBtn$.data('confirmed', true);
+				thisBtn$.html(message).addClass(options.className).bind('mouseout.confirm', function() {
 					timeoToken = setTimeout(resetBtn, options.timeout);
 				}).bind('mouseover.confirm', function() {
 					clearTimeout(timeoToken);
